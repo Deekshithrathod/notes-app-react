@@ -947,7 +947,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
@@ -979,110 +979,106 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function App() {
-    var _React$useState = _react2.default.useState(function () {
-        return JSON.parse(localStorage.getItem("notes")) || [];
-    }),
-        _React$useState2 = _slicedToArray(_React$useState, 2),
-        notes = _React$useState2[0],
-        setNotes = _React$useState2[1];
+  var _React$useState = _react2.default.useState(function () {
+    return JSON.parse(localStorage.getItem("notes")) || [];
+  }),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      notes = _React$useState2[0],
+      setNotes = _React$useState2[1];
 
-    var _React$useState3 = _react2.default.useState(notes[0] && notes[0].id || ""),
-        _React$useState4 = _slicedToArray(_React$useState3, 2),
-        currentNoteId = _React$useState4[0],
-        setCurrentNoteId = _React$useState4[1];
+  var _React$useState3 = _react2.default.useState(notes[0] && notes[0].id || ""),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      currentNoteId = _React$useState4[0],
+      setCurrentNoteId = _React$useState4[1];
 
-    _react2.default.useEffect(function () {
-        localStorage.setItem("notes", JSON.stringify(notes));
-    }, [notes]);
+  _react2.default.useEffect(function () {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
 
-    function createNewNote() {
-        var newNote = {
-            id: (0, _nanoid.nanoid)(),
-            body: "# Type your markdown note's title here"
-        };
-        setNotes(function (prevNotes) {
-            return [newNote].concat(_toConsumableArray(prevNotes));
-        });
-        setCurrentNoteId(newNote.id);
-    }
+  function createNewNote() {
+    var newNote = {
+      id: (0, _nanoid.nanoid)(),
+      body: "# Type your markdown note's title here"
+    };
+    setNotes(function (prevNotes) {
+      return [newNote].concat(_toConsumableArray(prevNotes));
+    });
+    setCurrentNoteId(newNote.id);
+  }
 
-    function updateNote(text) {
-        // Put the most recently-modified note at the top
-        setNotes(function (oldNotes) {
-            var newArray = [];
-            for (var i = 0; i < oldNotes.length; i++) {
-                var oldNote = oldNotes[i];
-                if (oldNote.id === currentNoteId) {
-                    newArray.unshift(Object.assign({}, oldNote, { body: text }));
-                } else {
-                    newArray.push(oldNote);
-                }
-            }
-            return newArray;
-        });
-    }
+  function updateNote(text) {
+    // Put the most recently-modified note at the top
+    setNotes(function (oldNotes) {
+      var newArray = [];
+      for (var i = 0; i < oldNotes.length; i++) {
+        var oldNote = oldNotes[i];
+        if (oldNote.id === currentNoteId) {
+          newArray.unshift(Object.assign({}, oldNote, { body: text }));
+        } else {
+          newArray.push(oldNote);
+        }
+      }
+      return newArray;
+    });
+  }
 
-    /**
-     * Challenge: complete and implement the deleteNote function
-     * 
-     * Hints: 
-     * 1. What array method can be used to return a new
-     *    array that has filtered out an item based 
-     *    on a condition?
-     * 2. Notice the parameters being based to the function
-     *    and think about how both of those parameters
-     *    can be passed in during the onClick event handler
-     */
+  /**
+   * Challenge: complete and implement the deleteNote function
+   *
+   * Hints:
+   * 1. What array method can be used to return a new
+   *    array that has filtered out an item based
+   *    on a condition?
+   * 2. Notice the parameters being based to the function
+   *    and think about how both of those parameters
+   *    can be passed in during the onClick event handler
+   */
 
-    function deleteNote(event, noteId) {
-        event.stopPropagation();
-        // Your code here
-    }
+  function deleteNote(event, noteId) {
+    event.stopPropagation();
+    // Your code here
+    setNotes(function (prevStateNotes) {
+      return prevStateNotes.filter(function (note) {
+        return note.id !== noteId;
+      });
+    });
+  }
 
-    function findCurrentNote() {
-        return notes.find(function (note) {
-            return note.id === currentNoteId;
-        }) || notes[0];
-    }
+  function findCurrentNote() {
+    return notes.find(function (note) {
+      return note.id === currentNoteId;
+    }) || notes[0];
+  }
 
-    return _react2.default.createElement(
-        "main",
+  return _react2.default.createElement(
+    "main",
+    null,
+    notes.length > 0 ? _react2.default.createElement(
+      _reactSplit2.default,
+      { sizes: [30, 70], direction: "horizontal", className: "split" },
+      _react2.default.createElement(_Sidebar2.default, {
+        notes: notes,
+        currentNote: findCurrentNote(),
+        setCurrentNoteId: setCurrentNoteId,
+        newNote: createNewNote,
+        deleteNoteHandler: deleteNote
+      }),
+      currentNoteId && notes.length > 0 && _react2.default.createElement(_Editor2.default, { currentNote: findCurrentNote(), updateNote: updateNote })
+    ) : _react2.default.createElement(
+      "div",
+      { className: "no-notes" },
+      _react2.default.createElement(
+        "h1",
         null,
-        notes.length > 0 ? _react2.default.createElement(
-            _reactSplit2.default,
-            {
-                sizes: [30, 70],
-                direction: "horizontal",
-                className: "split"
-            },
-            _react2.default.createElement(_Sidebar2.default, {
-                notes: notes,
-                currentNote: findCurrentNote(),
-                setCurrentNoteId: setCurrentNoteId,
-                newNote: createNewNote
-            }),
-            currentNoteId && notes.length > 0 && _react2.default.createElement(_Editor2.default, {
-                currentNote: findCurrentNote(),
-                updateNote: updateNote
-            })
-        ) : _react2.default.createElement(
-            "div",
-            { className: "no-notes" },
-            _react2.default.createElement(
-                "h1",
-                null,
-                "You have no notes"
-            ),
-            _react2.default.createElement(
-                "button",
-                {
-                    className: "first-note",
-                    onClick: createNewNote
-                },
-                "Create one now"
-            )
-        )
-    );
+        "You have no notes"
+      ),
+      _react2.default.createElement(
+        "button",
+        { className: "first-note", onClick: createNewNote },
+        "Create one now"
+      )
+    )
+  );
 }
 
 /***/ }),
@@ -1201,7 +1197,7 @@ function Editor(_ref) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.default = Sidebar;
 
@@ -1212,55 +1208,58 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function Sidebar(props) {
-    var noteElements = props.notes.map(function (note, index) {
-        return _react2.default.createElement(
-            "div",
-            { key: note.id },
-            _react2.default.createElement(
-                "div",
-                {
-
-                    className: "title " + (note.id === props.currentNote.id ? "selected-note" : ""),
-                    onClick: function onClick() {
-                        return props.setCurrentNoteId(note.id);
-                    }
-                },
-                _react2.default.createElement(
-                    "h4",
-                    { className: "text-snippet" },
-                    note.body.split("\n")[0]
-                ),
-                _react2.default.createElement(
-                    "button",
-                    {
-                        className: "delete-btn"
-                        // Your onClick event handler here
-                    },
-                    _react2.default.createElement("i", { className: "gg-trash trash-icon" })
-                )
-            )
-        );
-    });
-
+  console.log(props.deleteNote);
+  var noteElements = props.notes.map(function (note, index) {
     return _react2.default.createElement(
-        "section",
-        { className: "pane sidebar" },
+      "div",
+      { key: note.id },
+      _react2.default.createElement(
+        "div",
+        {
+          className: "title " + (note.id === props.currentNote.id ? "selected-note" : ""),
+          onClick: function onClick() {
+            return props.setCurrentNoteId(note.id);
+          }
+        },
         _react2.default.createElement(
-            "div",
-            { className: "sidebar--header" },
-            _react2.default.createElement(
-                "h3",
-                null,
-                "Notes"
-            ),
-            _react2.default.createElement(
-                "button",
-                { className: "new-note", onClick: props.newNote },
-                "+"
-            )
+          "h4",
+          { className: "text-snippet" },
+          note.body.split("\n")[0]
         ),
-        noteElements
+        _react2.default.createElement(
+          "button",
+          {
+            className: "delete-btn"
+            // Your onClick event handler here
+            , onClick: function onClick(event) {
+              return props.deleteNoteHandler(event, note.id);
+            }
+          },
+          _react2.default.createElement("i", { className: "gg-trash trash-icon" })
+        )
+      )
     );
+  });
+
+  return _react2.default.createElement(
+    "section",
+    { className: "pane sidebar" },
+    _react2.default.createElement(
+      "div",
+      { className: "sidebar--header" },
+      _react2.default.createElement(
+        "h3",
+        null,
+        "Notes"
+      ),
+      _react2.default.createElement(
+        "button",
+        { className: "new-note", onClick: props.newNote },
+        "+"
+      )
+    ),
+    noteElements
+  );
 }
 
 /***/ }),
